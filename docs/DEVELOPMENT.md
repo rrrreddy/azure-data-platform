@@ -1,22 +1,32 @@
 # Development Guide
 
-## Local Setup
-```bash
-git clone ...
-cd azure-data-platform
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+## Setup
+
+1. Clone repository
+2. Create virtual environment: `python -m venv venv`
+3. Activate: `venv\Scripts\activate`
+4. Install: `pip install -r requirements.txt`
 
 ## Running Tests
+
 ```bash
-pytest tests/ -v --cov=projects
+make test              # All tests
+make test-unit         # Unit only
+make test-int          # Integration only
+```
+
+## Code Quality 
+
+```bash
+make lint              # Check
+make format            # Auto-format
+make type-check        # Type check
 ```
 
 ## Git Workflow
-1. Create feature branch: `git checkout -b feature/xyz`
+
+1. Feature branch: `git checkout -b feature/xyz`
 2. Make changes
 3. Push: `git push origin feature/xyz`
-4. Create PR on GitHub
-5. After approval, merge to develop
+4. Create PR
+5. Merge after approval

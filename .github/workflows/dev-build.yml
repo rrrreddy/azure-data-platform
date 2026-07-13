@@ -6,8 +6,11 @@ on:
   push:
     branches: [ develop ]
 
+env:
+  PYTHON_VERSION: '3.9'
+
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     
     steps:
@@ -16,17 +19,37 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
     
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Lint
-      run: black --check projects/
+    - name: Lint with pylint
+      run: |
+        pylint projects/ --disable=all --enable=E,F --exit-zero
       continue-on-error: true
     
-    - name: Test
-      run: pytest tests/ -v --cov=projects
+    - name: Format check with black
+      run: |
+        black --check projects/ --line-length=100
       continue-on-error: true
+    
+    - name: Run unit tests
+      run: |
+        pytest projects/*/tests/unit --verbose --cov=projects --cov-report=xml
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: false

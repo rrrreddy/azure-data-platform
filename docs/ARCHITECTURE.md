@@ -1,24 +1,39 @@
 # Architecture Overview
 
-## Project Structure
-- **Mortgages**: Real-time pipeline (10K events/day)
-- **Employee Analytics**: Batch pipeline (daily extraction)
+## System Design
+
+### High-Level Architecture
+
+Data Sources
+↓
+Azure Databricks
+├─ Streaming Pipeline (Mortgages)
+├─ Batch Pipeline (Employees)
+└─ Delta Lake
+↓
+Analytics & BI
+├─ Power BI
+├─ Dashboards
+└─ Reports
+
+
+### Projects
+
+#### Project 1: Mortgages Real-Time Analytics
+- Event Hubs → Streaming → ML Scoring → Delta → Power BI
+- Volume: 10K events/day
+- Latency: <500ms
+
+#### Project 2: Employee Performance Analytics
+- Multi-source extraction → Batch processing → Reports
+- Daily execution
+- 5K+ employees
 
 ## Infrastructure
-- Azure Resource Groups (DEV, UAT, PROD)
-- Databricks Workspaces (3x)
-- Storage Accounts (Data Lake Gen2)
-- Event Hubs (Real-time streaming)
-- Data Factory (Orchestration)
-- Key Vault (Secrets)
-- Monitoring (App Insights + Log Analytics)
 
-## Data Flow
+Three environments:
+- **DEV:** Experimental
+- **UAT:** Testing
+- **PROD:** Production (99.9% SLA)
 
-```
-Event Sources → Ingestion → Processing → Storage → Analytics
-```
-
-```
-See DEVELOPMENT.md for implementation details.
-```
+All managed via Terraform
