@@ -216,3 +216,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Additional entries
+*.tfstate*
+.terraform/
+.terraform.lock.hcl
+.env
+.env.local
+.vscode/
+.idea/
+*.swp
+.DS_Store
+vault/
